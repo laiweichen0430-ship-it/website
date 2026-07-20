@@ -395,7 +395,33 @@
     </div>
 
     <script>
-        // 🛠️ 資料庫設定
+        // 🛠️ Google Drive 網址轉換小助手 (自動解析 ID 並轉成直連)
+        function extractDriveId(urlOrId) {
+            if (!urlOrId) return '';
+            if (urlOrId.length < 20 && !urlOrId.includes('/') && !urlOrId.includes('.')) return urlOrId;
+            const match = urlOrId.match(/\/d\/([a-zA-Z0-9_-]+)/) || urlOrId.match(/id=([a-zA-Z0-9_-]+)/);
+            return match ? match[1] : urlOrId;
+        }
+
+        function getDriveImageUrl(urlOrId) {
+            if (!urlOrId) return 'https://picsum.photos/600/350';
+            if (urlOrId.startsWith('http://') || urlOrId.startsWith('https://')) {
+                if (!urlOrId.includes('drive.google.com')) return urlOrId;
+            }
+            const id = extractDriveId(urlOrId);
+            return id ? `https://lh3.googleusercontent.com/d/${id}` : urlOrId;
+        }
+
+        function getDriveEmbedUrl(urlOrId) {
+            if (!urlOrId) return '';
+            if (urlOrId.startsWith('http://') || urlOrId.startsWith('https://')) {
+                if (!urlOrId.includes('drive.google.com')) return urlOrId;
+            }
+            const id = extractDriveId(urlOrId);
+            return id ? `https://drive.google.com/file/d/${id}/preview` : urlOrId;
+        }
+
+        // 🛠️ 資料庫設定（此處可直接貼上 Google Drive 的「分享連結」或「檔案 ID」）
         const websiteData = {
             id: "root",
             title: "首頁",
@@ -413,20 +439,29 @@
                                     type: "image", 
                                     title: "7/1", 
                                     desc: "討論八月規劃+認識環境",
-                                    cover: "螢幕擷取畫面 2026-07-05 171716.png",
-                                    url: "螢幕擷取畫面 2026-07-05 171716.png",
+                                    cover: "https://drive.google.com/file/d/1I4T2-eTiE9w4sort3i7YRDLFQGdK5oRc/view?usp=drive_link",
+                                    url: "https://drive.google.com/file/d/1I4T2-eTiE9w4sort3i7YRDLFQGdK5oRc/view?usp=drive_link",
                                     review: "📝 7/1 心得：實習第一天，認識環境討論八月的規劃，拿到了地質期刊。" 
                                 },
                                 { 
                                     type: "multi-image", 
                                     title: "7/2", 
                                     desc: "做出網頁+開會", 
-                                    cover: "線上會議1.jpg", 
+                                    cover: "https://drive.google.com/file/d/1d0P5ACQH7ZILqACD1YaqrMEQ94Zzhc3Z/view?usp=drive_link", 
                                     images: [
-                                        "線上會議1.jpg", "線上會議2.jpg", "線上會議3.jpg", "線上會議4.jpg",
-                                        "線上會議5.jpg", "線上會議6.jpg", "線上會議7.jpg", "線上會議8.jpg",
-                                        "線上會議9.jpg", "線上會議10.jpg", "線上會議11.jpg", "線上會議12.jpg",
-                                        "線上會議13.jpg"
+                                        "https://drive.google.com/file/d/1r21KVtW0pGsMFFjxn_QCNkZoNbv43KhF/view?usp=drive_link",
+                                        "https://drive.google.com/file/d/1bQYzSQuv8-PCxf3Wx5gN8KHZWeX9_yVj/view?usp=drive_link",
+                                        "https://drive.google.com/file/d/1VFzoX683nClhGNtbG3SEJXQ3J7JI91ry/view?usp=drive_link",
+                                        "https://drive.google.com/file/d/1qloRgWNpm6l3pXZaKc7hBz8wsB4fv19F/view?usp=drive_link",
+                                        "https://drive.google.com/file/d/1AWuZPXroa2Tnsxhu8TJ12bMgkU9S0aL1/view?usp=drive_link",
+                                        "https://drive.google.com/file/d/1m79A9AneuG9gK6zAVOHzQFnX-KXUxW0H/view?usp=drive_link",
+                                        "https://drive.google.com/file/d/1IAX56GtmjhRRgcZk8cgmjuuJTjFgyZOo/view?usp=drive_link",
+                                        "https://drive.google.com/file/d/1u5DfIC9S2WgrtI3ZY1Abvx2FMAmASLtA/view?usp=drive_link",
+                                        "https://drive.google.com/file/d/1ANoc_jiu7b5O-ws7QrDXOQi1GhSn90no/view?usp=drive_link",
+                                        "https://drive.google.com/file/d/1TFKe9BtRrNGz9Wvu1xg4y7s9HZ03Gb4x/view?usp=drive_link",
+                                        "https://drive.google.com/file/d/17UG_9KK-meoLJS7SPhkMl9tQEGWmfb8w/view?usp=drive_link",
+                                        "https://drive.google.com/file/d/1u5XgWQQ-b4Y14HtACNpsHPFdBZTINXzh/view?usp=drive_link",
+                                        "https://drive.google.com/file/d/1d0P5ACQH7ZILqACD1YaqrMEQ94Zzhc3Z/view?usp=drive_link"
                                     ],
                                     review: "📝 7/2 心得：開始作個人網站，下午跟工研院及英國地調所開水文地質的會議" 
                                 },
@@ -434,11 +469,19 @@
                                     type: "multi-image", 
                                     title: "7/3記者會", 
                                     desc: "端傳媒記者會", 
-                                    cover: "記者會1.jpg", 
+                                    cover: "https://drive.google.com/file/d/10vhGka1dfEx7HkgW5h78ligOMloc4ssE/view?usp=drive_link", 
                                     images: [
-                                        "記者會1.jpg", "記者會2.jpg", "記者會3.jpg", "記者會4.jpg",
-                                        "記者會5.jpg", "記者會6.jpg", "記者會7.jpg", "記者會8.jpg",
-                                        "記者會9.jpg", "記者會10.jpg", "記者會11.jpg"
+                                        "https://drive.google.com/file/d/1tTXfF1hhqYPluWqCRAKK30tgcCfpp9q-/view?usp=drive_link",
+                                        "https://drive.google.com/file/d/1px-0IqKvbUEm8uCO_nWgA7iXOvj2g6rv/view?usp=drive_link",
+                                        "https://drive.google.com/file/d/1_KVJJEdBPgTjBb3c2sO-nI4Rmuyb_FzU/view?usp=drive_link",
+                                        "https://drive.google.com/file/d/1pf6M6dHddxGtfE1k47GyIuzQ7lMt_gif/view?usp=drive_link",
+                                        "https://drive.google.com/file/d/15JrLs3X4of3vyR1YIuw67VBBpBYaDY27/view?usp=drive_link",
+                                        "https://drive.google.com/file/d/1dV6R9Hs_krjGlQoylDUlSw9OQn0BEDLE/view?usp=drive_link",
+                                        "https://drive.google.com/file/d/19BEUHSAFsLeRqcku1Adtvzfhxi7Iudx5/view?usp=drive_link",
+                                        "https://drive.google.com/file/d/1XIdAueCCeCtPHOGUG-xMPWSnGgJfwaS0/view?usp=drive_link",
+                                        "https://drive.google.com/file/d/1tTsWc_W4K1WxR7-qzbOfDt61e4qDuXhZ/view?usp=drive_link",
+                                        "https://drive.google.com/file/d/17WNYYYhCfxQg0RalUBpvVRKxoeRv2Iqo/view?usp=drive_link",
+                                        "https://drive.google.com/file/d/10vhGka1dfEx7HkgW5h78ligOMloc4ssE/view?usp=drive_link"
                                     ],
                                     review: "📝 7/3 心得：參與端傳媒採訪「對台灣海底火山熱液礦物的探索及發展」" 
                                 }
@@ -454,53 +497,63 @@
                                     type: "video",
                                     title: "7/6：進度匯報影片",
                                     desc: "現場錄製的研究進度影片",
-                                    url: "my-video.mp4", 
+                                    url: "https://drive.google.com/file/d/12Ob1b9Na9k1rsmWhqCQdGZIfKmiGEKyO/view?usp=drive_link", 
                                     review: "📝 7/6 心得：今天錄製了實習影片，詳細記錄了這周野外調查與室內資料分析的完整流程，剪輯成精簡版成果。"
                                 },
                                 {
                                     type: "multi-image",
                                     title: "7/7：野外地質調查照片",
                                     desc: "當天拍攝的斷層露頭與環境照片",
-                                    cover: "中興社.jpg", 
+                                    cover: "https://drive.google.com/file/d/10KCiiKeUxTdEKnQ4vV5mbjhuk8NZsa1w/view?usp=drive_link", 
                                     images: [
-                                        "中興社.jpg","中興社1.jpg","中興社2.jpg","中興社3.jpg","中興社4.jpg","中興社5.jpg","中興社6.jpg",
-                                        "中興社7.jpg","中興社8.jpg","中興社9.jpg","中興社10.jpg","中興社11.jpg","中興社12.jpg","中興社13.jpg","中興社14.jpg"
+                                        "https://drive.google.com/file/d/1AsglLhmIMRSM-D1R3xPdGzK1kWYcmQn2/view?usp=drive_link",
+                                        "https://drive.google.com/file/d/1hfCKrdwlEz1do73gpqppyg-kCBcO54f8/view?usp=drive_link",
+                                        "https://drive.google.com/file/d/1mFdNwcIFMI3OUE3fni0OhZxHx7zonPwH/view?usp=drive_link",
+                                        "https://drive.google.com/file/d/1dKrQS0-MF3_4lG6RfvU91X4Nb2Gg-ibs/view?usp=drive_link",
+                                        "https://drive.google.com/file/d/1mCUrE0x0rrlIffNnvDiv3DFa3Y3t2zWS/view?usp=drive_link",
+                                        "https://drive.google.com/file/d/1pHL6eTkvzz56pZTQ5AsjeTj37lwY2uFw/view?usp=drive_link",
+                                        "https://drive.google.com/file/d/1TrTLQqlGxK_oTskqCn_Ar6HMyK9vYeZg/view?usp=drive_link",
+                                        "https://drive.google.com/file/d/10m85IIWUdkxCeqcngqO6wsS8PSl7asG2/view?usp=drive_link",
+                                        "https://drive.google.com/file/d/1D6aP2_Vd5zel5XAQCJ-j0zuNjNounDDu/view?usp=drive_link",
+                                        "https://drive.google.com/file/d/1MqOBtHY7rXbn586QUOOxRtRU4CQZBffV/view?usp=drive_link",
+                                        "https://drive.google.com/file/d/1k9lpkVERZFO1uxf7sohK4rKWer75xBcl/view?usp=drive_link",
+                                        "https://drive.google.com/file/d/1XWg1WX_VBalgXlBbXepKGk_uisHwGMjO/view?usp=drive_link",
+                                        "https://drive.google.com/file/d/1jL2EakH87qc8KvEAFPaI00v6vD10iMmC/view?usp=drive_link",
+                                        "https://drive.google.com/file/d/13QDKAvPCYDR2WvQEMpM-xzWhERLcW9Oe/view?usp=drive_link",
+                                        "https://drive.google.com/file/d/10KCiiKeUxTdEKnQ4vV5mbjhuk8NZsa1w/view?usp=drive_link"
                                     ],
                                     review: "📝 7/7 心得：今天至中興社參與交流報告，拍攝了豐富的相片紀錄。"
                                 }
                             ]
-                        }, /* 👈 注意這裡的逗號，用來連接第三周 */
-                        
-                        /* 🆕 這裡幫你全新加入第三周 */
+                        },
                         { 
                             id: "week-3", 
                             title: "第三周：7/13~7/17", 
                             desc: "點擊進入查看本周所有檔案", 
-                            cover: "https://picsum.photos/600/350?random=31", // 👈 可以自己換成你的圖片檔名，像是 "第三周封面.jpg"
+                            cover: "https://picsum.photos/600/350?random=31", 
                             items: [
-                                // 👇 這裡面可以放你想放的成果，我先幫你預留一個圖片格式跟一個影片格式：
                                 {
                                     type: "slide",
                                     title: "7/13：工研院地下水簡介",
-                                    cover: "工研院地下水.png", // 👈 換成你的照片檔名
-                                    url: "FY115_第二次工作會議簡報_0708.pdf",   // 👈 換成你的照片檔名
+                                    cover: "https://drive.google.com/file/d/1-qvhlkE_5035z9N-_3fllBRWivrF-pH9/view?usp=drive_link", 
+                                    url: "https://drive.google.com/file/d/1ai37gg-pgrZgl7BCmCPNpzLnwsfd2UWf/view?usp=drive_link", 
                                     review: "📝 用地球物理談測法針對中部平原與山區邊界的丘陵、台地區域調查地下水的流域地質"
                                 },
                                 {
                                     type: "slide",
                                     title: "7/14 岩石力學實驗的應用",
-                                    cover: "岩石力學實驗應用.png", // 👈 換成你的照片檔名
-                                    url: "Reviews of Geophysics - 2022 - Viswanathan - From Fluid Flow to Coupled Processes in Fractured Rock  Recent Advances an.pdf",   // 👈 換成你的照片檔名
+                                    cover: "https://drive.google.com/file/d/1Z_wV2wDAcbD5A2TRFif0Vs51cfFqw3xm/view?usp=drive_link", 
+                                    url: "https://drive.google.com/file/d/14KTWDRfPFURaFhgUPA5aszHFYzhdyRV1/view?usp=drive_link", 
                                     review: "📝 岩石力學實驗的運用，在有地下水之深度或有油氣之深度鑽井，需要多少壓力才能產生裂隙但不引發地震，上下用封篩決定需要的深度範圍，再從井口抽出或送入壓力來取水或進行攤封存等技術"
                                 },
                                 { 
                                     type: "image", 
                                     title: "7/16", 
                                     desc: "正向勁度實驗",
-                                    cover: "正向勁度.jpg",
-                                    url: "正向勁度.jpg",
+                                    cover: "https://drive.google.com/file/d/1q6D-P5DwtWsIwJHOS-XgoPlAX1AMY7Ol/view?usp=drive_link",
+                                    url: "https://drive.google.com/file/d/1q6D-P5DwtWsIwJHOS-XgoPlAX1AMY7Ol/view?usp=drive_link",
                                     review: "📝 7/16 用於判別岩石的彈性係數。" 
-                                },
+                                }
                             ]
                         }
                     ]
@@ -517,21 +570,21 @@
                         { 
                             type: "slide", 
                             title: "地震預警品質評估簡報", 
-                            cover: "螢幕擷取畫面 2026-07-03 134353.png",
-                            url: "地震預警品質評估.pdf",
+                            cover: "https://drive.google.com/file/d/1Gq1JbcyuQVSuNlaBee7x3ifdPqfsa4xU/view?usp=drive_link",
+                            url: "https://drive.google.com/file/d/1PmlG5nBgWe5CGxq12FNauX3O_zqnao-g/view?usp=drive_link",
                             review: "📊 專題簡報：本研究深入分析了台灣地區地震預警系統的警報發布品質，探討測站盲區、定位震級誤差以及震波傳播走時曲線的優化演算法。"
                         },
                         { 
                             type: "slide", 
                             title: "課本的終彰",  
-                            cover: "螢幕擷取畫面 2026-07-03 134545.png",
-                            url: "10900341 賴韋辰 課本的終彰.pdf" 
+                            cover: "https://drive.google.com/file/d/14B5tYjpyX4_HXFYVmEap8pI-iYSk6JTZ/view?usp=drive_link",
+                            url: "https://drive.google.com/file/d/10AdJp1-QOwQEnn3XQpi-nA2E9f6Dnzyo/view?usp=drive_link" 
                         },
                         { 
                             type: "slide", 
                             title: "podcast",  
-                            cover: "螢幕擷取畫面 2026-07-03 134711.png",
-                            url: "112學年 PODCAST.pdf" 
+                            cover: "https://drive.google.com/file/d/19pEGgfDlW0Xjc7uD-wopmGI-uGhUXiGc/view?usp=drive_link",
+                            url: "https://drive.google.com/file/d/1eIt8ahkCBSqLaWsJuTSv1oertlhGHxuW/view?usp=drive_link" 
                         }
                     ] 
                 }
@@ -562,7 +615,7 @@
             if (navigationHistory.length === 1) {
                 contentWrapper.className = "hero-section"; 
                 contentWrapper.innerHTML = `
-                    <img class="hero-bg-image" src="HHHH2863.jpg" alt="韋辰的滿版背景照片">
+                    <img class="hero-bg-image" src="${getDriveImageUrl('https://drive.google.com/file/d/14ISiHfqp98CF3PnQoaUB4AZwzfNh5oCE/view?usp=drive_link')}" alt="韋辰的滿版背景照片">
                     
                     <div class="hero-main-view">
                         <div class="hero-links-container">
@@ -601,7 +654,7 @@
                         cardsHtml += `
                             <div class="video-card" onclick="enterNextLayer(${index})">
                                 <div class="thumbnail-box">
-                                    <img src="${item.cover || 'https://picsum.photos/600/350'}" alt="封面">
+                                    <img src="${getDriveImageUrl(item.cover)}" alt="封面">
                                 </div>
                                 <div class="video-info">
                                     <p class="video-title">📁 ${item.title}</p>
@@ -615,15 +668,15 @@
                         let cardClickAction = ""; 
 
                         if (item.type === "slide") {
-                            mediaTag = `<img src="${item.cover || 'https://picsum.photos/600/350'}" alt="簡報封面">`;
+                            mediaTag = `<img src="${getDriveImageUrl(item.cover)}" alt="簡報封面">`;
                             cardClickAction = `onclick="openMediaModal(${index})"`;
                         } else if (item.type === "multi-image") {
-                            mediaTag = `<img src="${item.cover || 'https://picsum.photos/600/350'}" alt="多圖封面">`;
+                            mediaTag = `<img src="${getDriveImageUrl(item.cover)}" alt="多圖封面">`;
                             cardClickAction = `onclick="openMediaModal(${index})"`;
                         } else if (item.type === "video") {
-                            mediaTag = `<iframe src="${item.url}" allowfullscreen></iframe>`;
+                            mediaTag = `<iframe src="${getDriveEmbedUrl(item.url)}" allowfullscreen></iframe>`;
                         } else if (item.type === "image") {
-                            mediaTag = `<img src="${item.url}" alt="圖片">`;
+                            mediaTag = `<img src="${getDriveImageUrl(item.url)}" alt="圖片">`;
                         }
 
                         cardsHtml += `
@@ -680,9 +733,9 @@
             const modalBody = document.getElementById('modalBody');
             
             if (item.type === "slide") {
-                modalBody.innerHTML = `<iframe src="${item.url}" style="width:100%; height:65vh; border:none;"></iframe>`;
+                modalBody.innerHTML = `<iframe src="${getDriveEmbedUrl(item.url)}" style="width:100%; height:65vh; border:none;"></iframe>`;
             } else if (item.type === "multi-image" && item.images) {
-                let imgsHtml = item.images.map(img => `<img src="${img}" style="width:100%; margin-bottom:15px; border-radius:8px;">`).join('');
+                let imgsHtml = item.images.map(img => `<img src="${getDriveImageUrl(img)}" style="width:100%; margin-bottom:15px; border-radius:8px;">`).join('');
                 modalBody.innerHTML = `<div style="max-height:65vh; overflow-y:auto;">${imgsHtml}</div>`;
             }
             

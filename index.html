@@ -357,9 +357,9 @@
             <div class="nav-item">
                 <span>地礦中心實習</span>
                 <div class="nav-dropdown">
-                    <div class="dropdown-item" onclick="clickNavbarMenu(0); setTimeout(() => enterNextLayer(0), 50)">📁 第一周：7/1~7/3</div>
-                    <div class="dropdown-item" onclick="clickNavbarMenu(0); setTimeout(() => enterNextLayer(1), 50)">📁 第二周：7/6~7/10</div>
-                    <div class="dropdown-item" onclick="clickNavbarMenu(0); setTimeout(() => enterNextLayer(2), 50)">📁 第三周：7/13~7/17</div>
+                    <div class="dropdown-item" onclick="navigateToSubLayer(0, 0)">📁 第一周：7/1~7/3</div>
+                    <div class="dropdown-item" onclick="navigateToSubLayer(0, 1)">📁 第二周：7/6~7/10</div>
+                    <div class="dropdown-item" onclick="navigateToSubLayer(0, 2)">📁 第三周：7/13~7/17</div>
                 </div>
             </div> 
             
@@ -395,7 +395,7 @@
     </div>
 
     <script>
-        // 🛠️ Google Drive 網址轉換小助手 (自動解析 ID 並轉成直連)
+        // 🛠️ Google Drive 網址轉換小助手 (解決 GitHub 跨域阻擋破圖問題)
         function extractDriveId(urlOrId) {
             if (!urlOrId) return '';
             if (urlOrId.length < 20 && !urlOrId.includes('/') && !urlOrId.includes('.')) return urlOrId;
@@ -409,7 +409,8 @@
                 if (!urlOrId.includes('drive.google.com')) return urlOrId;
             }
             const id = extractDriveId(urlOrId);
-            return id ? `https://lh3.googleusercontent.com/d/${id}` : urlOrId;
+            // 改用驅動縮圖代理伺服器，可防止跨域 (CORS) 被擋破圖
+            return id ? `https://drive.google.com/thumbnail?id=${id}&sz=w1000` : urlOrId;
         }
 
         function getDriveEmbedUrl(urlOrId) {
@@ -421,7 +422,7 @@
             return id ? `https://drive.google.com/file/d/${id}/preview` : urlOrId;
         }
 
-        // 🛠️ 資料庫設定（此處可直接貼上 Google Drive 的「分享連結」或「檔案 ID」）
+        // 🛠️ 資料庫設定
         const websiteData = {
             id: "root",
             title: "首頁",
@@ -701,6 +702,14 @@
         function clickNavbarMenu(index) {
             navigationHistory = [websiteData];
             navigationHistory.push(websiteData.items[index]);
+            renderCurrentLayer();
+        }
+
+        function navigateToSubLayer(menuIndex, subIndex) {
+            navigationHistory = [websiteData, websiteData.items[menuIndex]];
+            if (websiteData.items[menuIndex].items && websiteData.items[menuIndex].items[subIndex]) {
+                navigationHistory.push(websiteData.items[menuIndex].items[subIndex]);
+            }
             renderCurrentLayer();
         }
 

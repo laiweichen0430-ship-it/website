@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>賴韋辰的個人網站</title>
+    <style>
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        /* 🌐 頂部導覽列：三欄獨立 */
+        .navbar {
+            background-color: white;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between; 
+            align-items: center;
+            border-bottom: 1px solid #e5e5e5;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-sizing: border-box;
+        }
+
+        .nav-logo {
+            font-size: 20px;
+            font-weight: bold;
+            color: #0f0f0f;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 1001;
+            text-decoration: none;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 40px; 
+            align-items: center;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .nav-contact-btn {
+            background-color: #559696;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 14px;
+            transition: background 0.2s;
+            white-space: nowrap;
+            z-index: 1001;
+        }
+        .nav-contact-btn:hover {
+            background-color: #3f7373;
+        }
+
+        .nav-item {
+            position: relative;
+            font-size: 16px;
+            font-weight: 500;
+            color: #4a4a4a;
+            cursor: pointer;
+            padding: 10px 0; 
+        }
+        .nav-item:hover {
+            color: #2b9393; 
+        }
+
+        .nav-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(10px);
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid #e5e5e5;
+            border-radius: 8px;
+            padding: 8px 0;
+            min-width: 220px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            opacity: 0;
+            pointer-events: none; 
+            transition: all 0.3s ease;
+            z-index: 2000;
+        }
+
+        .nav-item:hover .nav-dropdown {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .dropdown-item {
+            padding: 12px 20px;
+            font-size: 14px;
+            color: #4a4a4a;
+            text-align: left;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+        .dropdown-item:hover {
+            background-color: rgba(85, 150, 150, 0.1);
+            color: #2b9393;
+        }
+
+        /* 麵包屑導覽 */
+        .breadcrumb-bar {
+            background-color: #ffffff;
+            padding: 12px 40px;
+            border-bottom: 1px solid #e5e5e5;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .back-btn {
+            background-color: #0f0f0f;
+            color: white;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        /* 📂 內層卡片專用容器 */
+        .main-content { 
+            padding: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+            box-sizing: border-box;
+        }
+
+        /* 🌌 首頁滿版背景外殼 */
+        .hero-section {
+            position: fixed; 
+            top: 65px; 
+            left: 0;
+            width: 100vw; 
+            height: calc(100vh - 65px); 
+            overflow-y: auto; 
+            scroll-behavior: smooth; 
+            background-color: #0f0f0f;
+            z-index: 5;
+        }
+
+        .hero-bg-image {
+            position: fixed; 
+            top: calc(50% + 32px);
+            left: 50%;
+            width: 100%;
+            height: calc(100vh - 65px);
+            object-fit: cover;
+            object-position: center;
+            transform: translate(-50%, -50%);
+            z-index: 1;
+            transition: opacity 0.4s ease, transform 0.4s ease; 
+        }
+
+        .hero-section:has(.hero-link-card:hover) .hero-bg-image {
+            opacity: 0.4; 
+            transform: translate(-50%, -50%) scale(1.02); 
+        }
+
+        body:has(.nav-item:hover) .hero-bg-image {
+            opacity: 0.25 !important;
+            transform: translate(-50%, -50%) scale(0.99) !important;
+        }
+
+        .hero-main-view {
+            width: 100%;
+            height: 100%; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-links-container {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            width: 100%;
+            max-width: 800px;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .hero-link-card {
+            background-color: rgba(255, 255, 255, 0.15); 
+            backdrop-filter: blur(8px); 
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            padding: 18px 36px;
+            border-radius: 30px; 
+            min-width: 180px;
+            color: #ffffff; 
+            font-size: 16px;
+            font-weight: 500;
+            text-decoration: none;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3); 
+        }
+        .hero-link-card:hover {
+            background-color: #559696; 
+            border-color: #559696;
+            color: #ffffff;
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(85, 150, 150, 0.4);
+        }
+
+        .hero-scroll-arrow {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 32px;
+            cursor: pointer;
+            text-decoration: none;
+            animation: bounce 2s infinite; 
+            z-index: 3;
+        }
+
+        .hero-profile-content {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            min-height: 100%; 
+            background: linear-gradient(to bottom, rgba(15,15,15,0.7) 0%, rgba(15,15,15,0.95) 100%); 
+            backdrop-filter: blur(10px); 
+            -webkit-backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 60px 20px;
+            box-sizing: border-box;
+        }
+
+        .profile-text-box {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 40px;
+            max-width: 800px;
+            width: 100%;
+            color: #ffffff;
+            text-align: left;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        .profile-text-box h2 {
+            font-size: 28px;
+            margin-top: 0;
+            color: #559696; 
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 15px;
+        }
+        .profile-text-box p { font-size: 16px; line-height: 1.8; color: #dcdcdc; }
+
+        /* 🎴 內層網格排版 */
+        .youtube-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 40px 24px;
+            width: 100%;
+        }
+
+        .video-card {
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .video-card:hover { transform: translateY(-4px); }
+
+        .thumbnail-box {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%;
+            background-color: #e0e0e0;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .thumbnail-box iframe, .thumbnail-box img {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            border: none; object-fit: cover;
+        }
+        
+        .video-title { font-size: 16px; font-weight: bold; margin: 0 0 6px 0; color: #0f0f0f; }
+        .video-desc { font-size: 14px; color: #888888; margin: 0; line-height: 1.4; }
+        
+        /* 🎬 心得文字的專屬 CSS 樣式 */
+        .video-review {
+            font-size: 14px;
+            color: #2b2b2b; 
+            font-weight: 500; 
+            margin-top: 12px; 
+            line-height: 1.5;
+            border-top: 1px dashed #e5e5e5; 
+            padding-top: 10px;
+        }
+
+        /* 彈出式大視窗 */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex; justify-content: center; align-items: center;
+            z-index: 9999; opacity: 0; pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .modal-overlay.active { opacity: 1; pointer-events: auto; }
+        .modal-window {
+            background-color: white; width: 90%; max-width: 800px; max-height: 85vh;
+            border-radius: 16px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            overflow-y: auto; position: relative;
+        }
+        .modal-close-btn {
+            position: absolute; top: 20px; right: 20px; background: #f0f0f0; border: none;
+            font-size: 20px; width: 36px; height: 36px; border-radius: 50%; cursor: pointer;
+            display: flex; justify-content: center; align-items: center;
+        }
+        .modal-title { font-size: 24px; font-weight: bold; margin-bottom: 8px; color: #0f0f0f; border-bottom: 2px solid #f0f0f0; padding-bottom: 12px; }
+        .modal-meta { font-size: 14px; color: #606060; margin-bottom: 20px; }
+        .modal-body { font-size: 16px; color: #212529; line-height: 1.8; }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translate(-50%, 0); }
+            40% { transform: translate(-50%, -10px); }
+            60% { transform: translate(-50%, -5px); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 🌐 頂部導覽列 -->
+    <div class="navbar">
+        <a class="nav-logo" onclick="goToHome()">
+            <span>📐 韋辰設計工作站</span>
+        </a>
+        
+        <div class="nav-menu">
+            <div class="nav-item">
+                <span>地礦中心實習</span>
+                <div class="nav-dropdown">
+                    <div class="dropdown-item" onclick="clickNavbarMenu(0); setTimeout(() => enterNextLayer(0), 50)">📁 第一周：7/1~7/3</div>
+                    <div class="dropdown-item" onclick="clickNavbarMenu(0); setTimeout(() => enterNextLayer(1), 50)">📁 第二周：7/6~7/10</div>
+                    <div class="dropdown-item" onclick="clickNavbarMenu(0); setTimeout(() => enterNextLayer(2), 50)">📁 第三周：7/13~7/17</div>
+                </div>
+            </div> 
+            
+            <div class="nav-item">
+                <span>ABC 課程筆記</span>
+                <div class="nav-dropdown">
+                    <div class="dropdown-item" onclick="clickNavbarMenu(1)">📁 查看所有筆記</div>
+                </div>
+            </div>
+            
+            <div class="nav-item" onclick="clickNavbarMenu(2)">
+                <span>個人作品集</span>
+            </div>
+        </div>
+
+        <a class="nav-contact-btn" href="https://mail.google.com/mail/?view=cm&fs=1&to=laiweichen0430@gmail.com" target="_blank">聯絡我們 / Contact</a>
+    </div>
+
+    <!-- 麵包屑導覽區 -->
+    <div id="breadcrumbWrapper"></div>
+
+    <!-- 主要內容區 -->
+    <div id="contentWrapper"></div>
+
+    <!-- 彈出式大視窗 HTML 結構 -->
+    <div class="modal-overlay" id="mediaModal" onclick="closeModal()">
+        <div class="modal-window" onclick="event.stopPropagation()">
+            <button class="modal-close-btn" onclick="closeModal()">✕</button>
+            <div class="modal-title" id="modalTitle">標題</div>
+            <div class="modal-meta" id="modalMeta">副標題</div>
+            <div class="modal-body" id="modalBody">內文</div>
+        </div>
+    </div>
+
+    <script>
+        // 🛠️ 資料庫設定
+        const websiteData = {
+            id: "root",
+            title: "首頁",
+            items: [
+                {
+                    id: "di-kuang",
+                    title: "地礦中心實習",
+                    items: [
+                        {
+                            id: "week-1",
+                            title: "第一周：7/1~7/3",
+                            desc: "點擊進入查看本周所有檔案",
+                            items: [
+                                { 
+                                    type: "image", 
+                                    title: "7/1", 
+                                    desc: "討論八月規劃+認識環境",
+                                    cover: "螢幕擷取畫面 2026-07-05 171716.png",
+                                    url: "螢幕擷取畫面 2026-07-05 171716.png",
+                                    review: "📝 7/1 心得：實習第一天，認識環境討論八月的規劃，拿到了地質期刊。" 
+                                },
+                                { 
+                                    type: "multi-image", 
+                                    title: "7/2", 
+                                    desc: "做出網頁+開會", 
+                                    cover: "線上會議1.jpg", 
+                                    images: [
+                                        "線上會議1.jpg", "線上會議2.jpg", "線上會議3.jpg", "線上會議4.jpg",
+                                        "線上會議5.jpg", "線上會議6.jpg", "線上會議7.jpg", "線上會議8.jpg",
+                                        "線上會議9.jpg", "線上會議10.jpg", "線上會議11.jpg", "線上會議12.jpg",
+                                        "線上會議13.jpg"
+                                    ],
+                                    review: "📝 7/2 心得：開始作個人網站，下午跟工研院及英國地調所開水文地質的會議" 
+                                },
+                                { 
+                                    type: "multi-image", 
+                                    title: "7/3記者會", 
+                                    desc: "端傳媒記者會", 
+                                    cover: "記者會1.jpg", 
+                                    images: [
+                                        "記者會1.jpg", "記者會2.jpg", "記者會3.jpg", "記者會4.jpg",
+                                        "記者會5.jpg", "記者會6.jpg", "記者會7.jpg", "記者會8.jpg",
+                                        "記者會9.jpg", "記者會10.jpg", "記者會11.jpg"
+                                    ],
+                                    review: "📝 7/3 心得：參與端傳媒採訪「對台灣海底火山熱液礦物的探索及發展」" 
+                                }
+                            ]
+                        },
+                        { 
+                            id: "week-2", 
+                            title: "第二周：7/6~7/10", 
+                            desc: "點擊進入查看本周所有檔案", 
+                            cover: "https://picsum.photos/600/350?random=21", 
+                            items: [
+                                {
+                                    type: "video",
+                                    title: "7/6：進度匯報影片",
+                                    desc: "現場錄製的研究進度影片",
+                                    url: "my-video.mp4", 
+                                    review: "📝 7/6 心得：今天錄製了實習影片，詳細記錄了這周野外調查與室內資料分析的完整流程，剪輯成精簡版成果。"
+                                },
+                                {
+                                    type: "multi-image",
+                                    title: "7/7：野外地質調查照片",
+                                    desc: "當天拍攝的斷層露頭與環境照片",
+                                    cover: "中興社.jpg", 
+                                    images: [
+                                        "中興社.jpg","中興社1.jpg","中興社2.jpg","中興社3.jpg","中興社4.jpg","中興社5.jpg","中興社6.jpg",
+                                        "中興社7.jpg","中興社8.jpg","中興社9.jpg","中興社10.jpg","中興社11.jpg","中興社12.jpg","中興社13.jpg","中興社14.jpg"
+                                    ],
+                                    review: "📝 7/7 心得：今天至中興社參與交流報告，拍攝了豐富的相片紀錄。"
+                                }
+                            ]
+                        }, /* 👈 注意這裡的逗號，用來連接第三周 */
+                        
+                        /* 🆕 這裡幫你全新加入第三周 */
+                        { 
+                            id: "week-3", 
+                            title: "第三周：7/13~7/17", 
+                            desc: "點擊進入查看本周所有檔案", 
+                            cover: "https://picsum.photos/600/350?random=31", // 👈 可以自己換成你的圖片檔名，像是 "第三周封面.jpg"
+                            items: [
+                                // 👇 這裡面可以放你想放的成果，我先幫你預留一個圖片格式跟一個影片格式：
+                                {
+                                    type: "slide",
+                                    title: "7/13：工研院地下水簡介",
+                                    cover: "工研院地下水.png", // 👈 換成你的照片檔名
+                                    url: "FY115_第二次工作會議簡報_0708.pdf",   // 👈 換成你的照片檔名
+                                    review: "📝 用地球物理談測法針對中部平原與山區邊界的丘陵、台地區域調查地下水的流域地質"
+                                },
+                                {
+                                    type: "slide",
+                                    title: "7/14 岩石力學實驗的應用",
+                                    cover: "岩石力學實驗應用.png", // 👈 換成你的照片檔名
+                                    url: "Reviews of Geophysics - 2022 - Viswanathan - From Fluid Flow to Coupled Processes in Fractured Rock  Recent Advances an.pdf",   // 👈 換成你的照片檔名
+                                    review: "📝 岩石力學實驗的運用，在有地下水之深度或有油氣之深度鑽井，需要多少壓力才能產生裂隙但不引發地震，上下用封篩決定需要的深度範圍，再從井口抽出或送入壓力來取水或進行攤封存等技術"
+                                },
+                                { 
+                                    type: "image", 
+                                    title: "7/16", 
+                                    desc: "正向勁度實驗",
+                                    cover: "正向勁度.jpg",
+                                    url: "正向勁度.jpg",
+                                    review: "📝 7/16 用於判別岩石的彈性係數。" 
+                                },
+                            ]
+                        }
+                    ]
+                },
+                {
+                    id: "course-notes",
+                    title: "ABC 課程筆記",
+                    items: [] 
+                },
+                {
+                    id: "personal-works",
+                    title: "個人作品集",
+                    items: [
+                        { 
+                            type: "slide", 
+                            title: "地震預警品質評估簡報", 
+                            cover: "螢幕擷取畫面 2026-07-03 134353.png",
+                            url: "地震預警品質評估.pdf",
+                            review: "📊 專題簡報：本研究深入分析了台灣地區地震預警系統的警報發布品質，探討測站盲區、定位震級誤差以及震波傳播走時曲線的優化演算法。"
+                        },
+                        { 
+                            type: "slide", 
+                            title: "課本的終彰",  
+                            cover: "螢幕擷取畫面 2026-07-03 134545.png",
+                            url: "10900341 賴韋辰 課本的終彰.pdf" 
+                        },
+                        { 
+                            type: "slide", 
+                            title: "podcast",  
+                            cover: "螢幕擷取畫面 2026-07-03 134711.png",
+                            url: "112學年 PODCAST.pdf" 
+                        }
+                    ] 
+                }
+            ]
+        };
+
+        let navigationHistory = [websiteData]; 
+        const contentWrapper = document.getElementById('contentWrapper');
+        const breadcrumbWrapper = document.getElementById('breadcrumbWrapper');
+
+        // 📝 核心渲染邏輯
+        function renderCurrentLayer() {
+            const currentLayer = navigationHistory[navigationHistory.length - 1];
+            
+            if (navigationHistory.length > 1) {
+                const pathText = navigationHistory.map(layer => layer.title).join(" ➔ ");
+                breadcrumbWrapper.innerHTML = `
+                    <div class="breadcrumb-bar">
+                        <button class="back-btn" onclick="goBack()">⬅ 回到上層</button>
+                        <span class="current-path">${pathText}</span>
+                    </div>
+                `;
+            } else {
+                breadcrumbWrapper.innerHTML = ""; 
+            }
+
+            // 如果是首頁
+            if (navigationHistory.length === 1) {
+                contentWrapper.className = "hero-section"; 
+                contentWrapper.innerHTML = `
+                    <img class="hero-bg-image" src="HHHH2863.jpg" alt="韋辰的滿版背景照片">
+                    
+                    <div class="hero-main-view">
+                        <div class="hero-links-container">
+                            <a class="hero-link-card" href="https://github.com/laiweichen0430-ship-it" target="_blank">🔗 個人 GitHub</a>
+                            <a class="hero-link-card" href="https://linkedin.com/" target="_blank">💼 LinkedIn 履歷</a>
+                            <a class="hero-link-card" href="https://line.me/ti/p/fEwpjBO26y" target="_blank">💬 聯絡我的 LINE</a>
+                        </div>
+                        <div class="hero-scroll-arrow" onclick="document.getElementById('profileSection').scrollIntoView({behavior: 'smooth'})">▼</div>
+                    </div>
+
+                    <div class="hero-profile-content" id="profileSection">
+                        <div class="profile-text-box">
+                            <h2>關於我 / About Me</h2>
+                            <p>👋 哈囉！我是賴韋辰。目前專注於地球科學領域研究。</p>
+                            <p>這裡是我的個人成果工作站，主要整理了我在實習期間的專案進度與學術簡報。</p>
+                            <p>以下是我的履歷</p>
+                            <p>市立福德國小</p>
+                            <p>市立瑠公國中</p>
+                            <p>市立內湖高中</p>
+                            <p>國立中央大學地球科學系</p>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            // 如果是內層卡片區
+            contentWrapper.className = "main-content"; 
+            
+            let cardsHtml = "";
+            if (currentLayer.items && currentLayer.items.length > 0) {
+                currentLayer.items.forEach((item, index) => {
+                    let reviewHtml = item.review ? `<div class="video-review">${item.review}</div>` : '';
+
+                    if (item.items) {
+                        cardsHtml += `
+                            <div class="video-card" onclick="enterNextLayer(${index})">
+                                <div class="thumbnail-box">
+                                    <img src="${item.cover || 'https://picsum.photos/600/350'}" alt="封面">
+                                </div>
+                                <div class="video-info">
+                                    <p class="video-title">📁 ${item.title}</p>
+                                    <p class="video-desc">${item.desc || ''}</p>
+                                    ${reviewHtml}
+                                </div>
+                            </div>
+                        `;
+                    } else {
+                        let mediaTag = "";
+                        let cardClickAction = ""; 
+
+                        if (item.type === "slide") {
+                            mediaTag = `<img src="${item.cover || 'https://picsum.photos/600/350'}" alt="簡報封面">`;
+                            cardClickAction = `onclick="openMediaModal(${index})"`;
+                        } else if (item.type === "multi-image") {
+                            mediaTag = `<img src="${item.cover || 'https://picsum.photos/600/350'}" alt="多圖封面">`;
+                            cardClickAction = `onclick="openMediaModal(${index})"`;
+                        } else if (item.type === "video") {
+                            mediaTag = `<iframe src="${item.url}" allowfullscreen></iframe>`;
+                        } else if (item.type === "image") {
+                            mediaTag = `<img src="${item.url}" alt="圖片">`;
+                        }
+
+                        cardsHtml += `
+                            <div class="video-card" ${cardClickAction}>
+                                <div class="thumbnail-box">${mediaTag}</div>
+                                <div class="video-info">
+                                    <p class="video-title">${item.title}</p>
+                                    <p class="video-desc">${item.desc || ''}</p>
+                                    ${reviewHtml}
+                                </div>
+                            </div>
+                        `;
+                    }
+                });
+                
+                contentWrapper.innerHTML = `<div class="youtube-grid">${cardsHtml}</div>`;
+            } else {
+                contentWrapper.innerHTML = "<p style='color:#606060; padding: 40px;'>這個資料夾目前空空的！</p>";
+            }
+        }
+
+        function clickNavbarMenu(index) {
+            navigationHistory = [websiteData];
+            navigationHistory.push(websiteData.items[index]);
+            renderCurrentLayer();
+        }
+
+        function goToHome() {
+            navigationHistory = [websiteData];
+            renderCurrentLayer();
+        }
+
+        function enterNextLayer(index) {
+            const currentLayer = navigationHistory[navigationHistory.length - 1];
+            if(currentLayer.items && currentLayer.items[index]) {
+                navigationHistory.push(currentLayer.items[index]); 
+                renderCurrentLayer();
+            }
+        }
+
+        function goBack() {
+            if (navigationHistory.length > 1) {
+                navigationHistory.pop(); 
+                renderCurrentLayer();
+            }
+        }
+
+        function openMediaModal(index) {
+            const currentLayer = navigationHistory[navigationHistory.length - 1];
+            const item = currentLayer.items[index];
+            
+            document.getElementById('modalTitle').textContent = item.title;
+            document.getElementById('modalMeta').textContent = item.desc || '';
+            const modalBody = document.getElementById('modalBody');
+            
+            if (item.type === "slide") {
+                modalBody.innerHTML = `<iframe src="${item.url}" style="width:100%; height:65vh; border:none;"></iframe>`;
+            } else if (item.type === "multi-image" && item.images) {
+                let imgsHtml = item.images.map(img => `<img src="${img}" style="width:100%; margin-bottom:15px; border-radius:8px;">`).join('');
+                modalBody.innerHTML = `<div style="max-height:65vh; overflow-y:auto;">${imgsHtml}</div>`;
+            }
+            
+            document.getElementById('mediaModal').classList.add('active'); 
+        }
+
+        function closeModal() {
+            document.getElementById('mediaModal').classList.remove('active');
+        }
+
+        renderCurrentLayer();
+    </script>
+</body>
+</html>

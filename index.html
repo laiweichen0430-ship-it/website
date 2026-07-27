@@ -357,9 +357,10 @@
             <div class="nav-item">
                 <span>地礦中心實習</span>
                 <div class="nav-dropdown">
-                    <div class="dropdown-item" onclick="navigateToSubLayer(0, 0)">📁 第一周：7/1~7/3</div>
-                    <div class="dropdown-item" onclick="navigateToSubLayer(0, 1)">📁 第二周：7/6~7/10</div>
-                    <div class="dropdown-item" onclick="navigateToSubLayer(0, 2)">📁 第三周：7/13~7/17</div>
+                    <div class="dropdown-item" onclick="clickNavbarMenu(0); setTimeout(() => enterNextLayer(0), 50)">📁 第一周：7/1~7/3</div>
+                    <div class="dropdown-item" onclick="clickNavbarMenu(0); setTimeout(() => enterNextLayer(1), 50)">📁 第二周：7/6~7/10</div>
+                    <div class="dropdown-item" onclick="clickNavbarMenu(0); setTimeout(() => enterNextLayer(2), 50)">📁 第三周：7/13~7/17</div>
+                    <div class="dropdown-item" onclick="clickNavbarMenu(0); setTimeout(() => enterNextLayer(3), 50)">📁 第四周：7/20~7/24</div>
                 </div>
             </div> 
             
@@ -395,7 +396,7 @@
     </div>
 
     <script>
-        // 🛠️ Google Drive 網址轉換小助手 (解決 GitHub 跨域阻擋破圖問題)
+        // 🛠️ Google Drive 網址轉換小助手 (自動解析 ID 並轉成直連)
         function extractDriveId(urlOrId) {
             if (!urlOrId) return '';
             if (urlOrId.length < 20 && !urlOrId.includes('/') && !urlOrId.includes('.')) return urlOrId;
@@ -409,8 +410,7 @@
                 if (!urlOrId.includes('drive.google.com')) return urlOrId;
             }
             const id = extractDriveId(urlOrId);
-            // 改用驅動縮圖代理伺服器，可防止跨域 (CORS) 被擋破圖
-            return id ? `https://drive.google.com/thumbnail?id=${id}&sz=w1000` : urlOrId;
+            return id ? `https://lh3.googleusercontent.com/d/${id}` : urlOrId;
         }
 
         function getDriveEmbedUrl(urlOrId) {
@@ -422,7 +422,7 @@
             return id ? `https://drive.google.com/file/d/${id}/preview` : urlOrId;
         }
 
-        // 🛠️ 資料庫設定
+        // 🛠️ 資料庫設定（此處可直接貼上 Google Drive 的「分享連結」或「檔案 ID」）
         const websiteData = {
             id: "root",
             title: "首頁",
@@ -554,6 +554,66 @@
                                     cover: "https://drive.google.com/file/d/1q6D-P5DwtWsIwJHOS-XgoPlAX1AMY7Ol/view?usp=drive_link",
                                     url: "https://drive.google.com/file/d/1q6D-P5DwtWsIwJHOS-XgoPlAX1AMY7Ol/view?usp=drive_link",
                                     review: "📝 7/16 用於判別岩石的彈性係數。" 
+                                }
+                            ]
+                        },
+                        {
+                            id: "week-4",
+                            title: "第四周：7/20~7/24",
+                            desc: "點擊進入查看本周所有檔案",
+                            cover: "https://picsum.photos/600/350?random=41",
+                            items: [
+                                {
+                                    type: "multi-image",
+                                    title: "7/20",
+                                    desc: "工研院meeting",
+                                    cover: "https://drive.google.com/file/d/1jUdLjPr5znYyQBk6zeKO7JqVx0V9Eu0q/view?usp=drive_link",
+                                    images: [
+                                        "https://drive.google.com/file/d/1jUdLjPr5znYyQBk6zeKO7JqVx0V9Eu0q/view?usp=drive_link",
+                                        "https://drive.google.com/file/d/1Z4kfvPr1xyQF5cBfUlGn0EfT10ZooPHV/view?usp=drive_link",
+                                        "https://drive.google.com/file/d/10J48DELAT-Z0WJPyRMv-zPaOuu-plpzU/view?usp=drive_link",
+                                        "https://drive.google.com/file/d/1fjT3VRn-GnyhuakZvkwHN09147JIj8wp/view?usp=drive_link",
+                                        "https://drive.google.com/file/d/1hwogFKoYzDikNFQwvPVQGN3yoC_i0wQd/view?usp=drive_link",
+                                        "https://drive.google.com/file/d/15b55jkSwIouZ4JzZ2a7XptSjzY26BeRL/view?usp=drive_link"
+
+                                    ],
+                                    review: "📝 主題一心得與紀錄說明。"
+                                },
+                                {
+                                    type: "multi-image",
+                                    title: "7/21~22",
+                                    desc: "中興社最後一天+鑽井資料",
+                                    cover: "https://drive.google.com/file/d/10iXLscWpe8UFIsdLc3TLRuM5SEXtmhuU/view?usp=drive_link",
+                                    images: [
+                                        "https://drive.google.com/file/d/10iXLscWpe8UFIsdLc3TLRuM5SEXtmhuU/view?usp=drive_link",
+                                        "https://drive.google.com/file/d/1DnLJmL9XXXbZJ7kSAX08-W764VGrLYi-/view?usp=drive_link",
+                                        "https://drive.google.com/file/d/15spYm3H8rY1fKLrRFkvTdRSWnDzPWtQC/view?usp=drive_link",
+                                        "https://drive.google.com/file/d/1WFHV6JQQIkKdJ4cNP62ofFRATN53H9pN/view?usp=drive_link",
+                                        "https://drive.google.com/file/d/1I8lSJKwFi8x0krcdci1Kj9DKYJJcgT8N/view?usp=drive_link"
+                                    ],
+                                    review: "📝 主題二心得與紀錄說明。"
+                                },
+                                {
+                                    type: "multi-image",
+                                    title: "7/23",
+                                    desc: "審查會議",
+                                    cover: "https://drive.google.com/file/d/1yTX0BTE7Ue1806dHp4c_vUZ47jDURWB6/view?usp=drive_link",
+                                    images: [
+                                        "https://drive.google.com/file/d/1yTX0BTE7Ue1806dHp4c_vUZ47jDURWB6/view?usp=drive_link",
+                                        "https://drive.google.com/file/d/1uEPjHLSHeBWLihrlzuiDnT66vWMJnP0E/view?usp=drive_link",
+                                        "https://drive.google.com/file/d/12FfZqTpqc5uUlWyR10qzJ9raGQ94PkQm/view?usp=drive_link"
+                                    ],
+                                    review: "📝 主題三心得與紀錄說明。"
+                                },
+                                {
+                                    type: "multi-image",
+                                    title: "7/24",
+                                    desc: "敏感區判別",
+                                    cover: "https://drive.google.com/file/d/1nh43AVn0iG0hdxKLopXq3OTL071mmbpD/view?usp=drive_link",
+                                    images: [
+                                        "https://drive.google.com/file/d/1nh43AVn0iG0hdxKLopXq3OTL071mmbpD/view?usp=drive_link",
+                                    ],
+                                    review: "📝 主題四周結與報告心得。"
                                 }
                             ]
                         }
@@ -702,14 +762,6 @@
         function clickNavbarMenu(index) {
             navigationHistory = [websiteData];
             navigationHistory.push(websiteData.items[index]);
-            renderCurrentLayer();
-        }
-
-        function navigateToSubLayer(menuIndex, subIndex) {
-            navigationHistory = [websiteData, websiteData.items[menuIndex]];
-            if (websiteData.items[menuIndex].items && websiteData.items[menuIndex].items[subIndex]) {
-                navigationHistory.push(websiteData.items[menuIndex].items[subIndex]);
-            }
             renderCurrentLayer();
         }
 

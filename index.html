@@ -370,9 +370,9 @@
             </div> 
             
             <div class="nav-item">
-                <span>ABC 課程筆記</span>
+                <span>影片</span>
                 <div class="nav-dropdown">
-                    <div class="dropdown-item" onclick="clickNavbarMenu(1)">📁 查看所有筆記</div>
+                    <div class="dropdown-item" onclick="clickNavbarMenu(1)">📁 查看所有影片</div>
                 </div>
             </div>
             
@@ -412,7 +412,7 @@
         function getDriveImageUrl(urlOrId) {
             if (!urlOrId) return 'https://picsum.photos/600/350';
             if (urlOrId.startsWith('http://') || urlOrId.startsWith('https://')) {
-                if (!urlOrId.includes('drive.google.com')) return urlOrId;
+                if (!urlOrId.includes('drive.google.com') && !urlOrId.includes('docs.google.com')) return urlOrId;
             }
             const id = extractDriveId(urlOrId);
             return id ? `https://lh3.googleusercontent.com/d/${id}` : urlOrId;
@@ -420,6 +420,11 @@
 
         function getDriveEmbedUrl(urlOrId) {
             if (!urlOrId) return '';
+            // 如果是 Google 簡報或文件的網址，轉成嵌入預覽
+            if (urlOrId.includes('docs.google.com/presentation')) {
+                const id = extractDriveId(urlOrId);
+                return id ? `https://docs.google.com/presentation/d/${id}/embed` : urlOrId;
+            }
             if (urlOrId.startsWith('http://') || urlOrId.startsWith('https://')) {
                 if (!urlOrId.includes('drive.google.com')) return urlOrId;
             }
@@ -683,6 +688,7 @@
                                 {
                                     type: "multi-image",
                                     title: "閱讀期刊報告",
+                                    desc: "期刊寫作模仿",
                                     cover: "https://drive.google.com/file/d/1Ym6eXzxySBKgDW10Dkk6MT476cPPWDpT/view?usp=drive_link",
                                     images: [
                                         "https://drive.google.com/file/d/1Ym6eXzxySBKgDW10Dkk6MT476cPPWDpT/view?usp=drive_link",
@@ -693,6 +699,7 @@
                                 {
                                     type: "multi-image",
                                     title: "選擇地點",
+                                    desc: "挑選野外調查地點",
                                     cover: "https://drive.google.com/file/d/1-n-9M65egWqtCqEn7duDIKDlwtfyJGqa/view?usp=drive_link",
                                     images: [
                                         "https://drive.google.com/file/d/1-n-9M65egWqtCqEn7duDIKDlwtfyJGqa/view?usp=drive_link"
@@ -730,11 +737,12 @@
                             id: "week-8",
                             title: "第八周：8/17~8/21",
                             desc: "點擊進入查看本周所有檔案",
+                            cover: "https://picsum.photos/600/350?random=81",
                             items: [
                                 {
                                     type: "multi-image",
                                     title: "開地熱會議",
-                                    desc: "第八周實習總結成果照片紀錄",
+                                    desc: "第八周實習成果照片紀錄",
                                     cover: "https://drive.google.com/file/d/1i5FTfSyeOLyu0Mir_w_CPlCYPgI5lFJY/view?usp=drive_link",
                                     images: [
                                         "https://drive.google.com/file/d/1i5FTfSyeOLyu0Mir_w_CPlCYPgI5lFJY/view?usp=drive_link"
@@ -772,6 +780,7 @@
                                 {
                                     type: "multi-image",
                                     title: "潛在斷層活動會議",
+                                    desc: "斷層活動討論研討",
                                     cover: "https://drive.google.com/file/d/12lhfGZp6LrqjmiFPFnsZZ1fec3Ap2Bis/view?usp=drive_link",
                                     images: [
                                         "https://drive.google.com/file/d/12lhfGZp6LrqjmiFPFnsZZ1fec3Ap2Bis/view?usp=drive_link"
@@ -780,8 +789,8 @@
                                 },
                                 {
                                     type: "multi-image",
-                                    title: "",
-                                    desc: "暑期期末報告",
+                                    title: "暑期期末報告",
+                                    desc: "實習成果報告發表",
                                     cover: "https://drive.google.com/file/d/1U4YSGGM62S3S1xRQRa6oDBA7XzGFaBSt/view?usp=drive_link",
                                     images: [
                                         "https://drive.google.com/file/d/1U4YSGGM62S3S1xRQRa6oDBA7XzGFaBSt/view?usp=drive_link",
@@ -798,12 +807,12 @@
                                         "https://drive.google.com/file/d/1U-83Eqd1-ArzpvJMFESw5nx0PB-gc9oe/view?usp=drive_link",
                                         "https://drive.google.com/file/d/1VBtT9rmqTPv7zhWixMr-tUL-iXRSBOQF/view?usp=drive_link"
                                     ],
-                                    review: "📝 暑期實習期末報告，實習圓滿結束，感謝所以有在地礦中心關心過我的老師們。"
+                                    review: "📝 暑期實習期末報告，實習圓滿結束，感謝所有在地礦中心關心過我的老師們。"
                                 },
                                 {
                                     type: "multi-image",
-                                    title: "",
-                                    desc: "完成薄片",
+                                    title: "完成薄片",
+                                    desc: "顯微鏡下的岩石薄片",
                                     cover: "https://drive.google.com/file/d/15hgBR7ZNcnuHEsjQE2jY3BVaT_dF3uob/view?usp=drive_link",
                                     images: [
                                         "https://drive.google.com/file/d/15hgBR7ZNcnuHEsjQE2jY3BVaT_dF3uob/view?usp=drive_link",
@@ -830,8 +839,16 @@
                 },
                 {
                     id: "course-notes",
-                    title: "ABC 課程筆記",
-                    items: [] 
+                    title: "影片",
+                    items: [
+                        { 
+                            type: "video", 
+                            title: "地震預警品質評估", 
+                            cover: "https://drive.google.com/file/d/1Gq1JbcyuQVSuNlaBee7x3ifdPqfsa4xU/view?usp=drive_link",
+                            url: "https://drive.google.com/file/d/1OjPnuH9fLmmhnZtjaV3CHeghLS79o1i0/view?usp=sharing",
+                            review: "氣象署專題報告 15分50秒開始"
+                        }
+                    ] 
                 },
                 {
                     id: "personal-works",
@@ -855,6 +872,18 @@
                             title: "podcast",  
                             cover: "https://drive.google.com/file/d/19pEGgfDlW0Xjc7uD-wopmGI-uGhUXiGc/view?usp=drive_link",
                             url: "https://drive.google.com/file/d/1eIt8ahkCBSqLaWsJuTSv1oertlhGHxuW/view?usp=drive_link" 
+                        },
+                        { 
+                            type: "slide", 
+                            title: "地礦中心暑期實習期末報告",  
+                            cover: "https://drive.google.com/file/d/1_uvfL_11ux1fd7O9j6MK9ZrO1bhXw_l_/view?usp=drive_link",
+                            url: "https://drive.google.com/file/d/1_uvfL_11ux1fd7O9j6MK9ZrO1bhXw_l_/view?usp=drive_link" 
+                        },
+                        { 
+                            type: "slide", 
+                            title: "校園暑期報告",  
+                            cover: "https://picsum.photos/600/350?random=105",
+                            url: "https://docs.google.com/presentation/d/1T2UJ6e-VlBnUN_E3GzYVU0DG5sTMTcvt/embed" 
                         }
                     ] 
                 }
@@ -906,6 +935,8 @@
                             <p>市立瑠公國中</p>
                             <p>市立內湖高中</p>
                             <p>國立中央大學地球科學系</p>
+                            <p>2025年交通部氣象署暑期實習生</p>
+                            <p>2026年經濟部地質調查所與礦業管理中心暑期實習生</p>
                         </div>
                     </div>
                 `;
